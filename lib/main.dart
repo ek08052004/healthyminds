@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/vision_board_screen.dart';
+import 'screens/home_screen.dart'; // Import HomeScreen
 
 void main() {
   runApp(MyApp());
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: VisionBoardScreen(),
+      home: HomeScreen(), // Set HomeScreen as the home widget
     );
   }
 }
