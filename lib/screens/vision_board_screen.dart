@@ -22,6 +22,14 @@ class _VisionBoardScreenState extends State<VisionBoardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Vision Board'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home),
+            onPressed: () {
+              Navigator.popUntil(context, ModalRoute.withName('/'));
+            },
+          ),
+        ],
       ),
       body: _images.isEmpty
           ? Center(
@@ -36,7 +44,8 @@ class _VisionBoardScreenState extends State<VisionBoardScreen> {
           final imagePath = await Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => UploadImageScreen(imageCount: _images.length)),
+                builder: (context) =>
+                    UploadImageScreen(imageCount: _images.length)),
           );
 
           if (imagePath != null) {

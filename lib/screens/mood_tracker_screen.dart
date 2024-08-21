@@ -1,0 +1,367 @@
+import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'dart:math';
+import 'package:intl/intl.dart';
+
+class MoodTrackerScreen extends StatefulWidget {
+  @override
+  _MoodTrackerScreenState createState() => _MoodTrackerScreenState();
+}
+
+class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
+  int _selectedMood = 4; // Default to Awful
+  DateTime _selectedDay = DateTime.now();
+
+  final List<String> moods = ["Rad", "Good", "Meh", "Bad", "Awful"];
+  final List<IconData> moodIcons = [
+    Icons.sentiment_very_satisfied,
+    Icons.sentiment_satisfied,
+    Icons.sentiment_neutral,
+    Icons.sentiment_dissatisfied,
+    Icons.sentiment_very_dissatisfied
+  ];
+  final List<Color> moodColors = [
+    Colors.orange,
+    Colors.green,
+    Colors.purple,
+    Colors.red,
+    Colors.blue,
+  ];
+
+  // Mood counts stored dynamically
+  final List<int> moodCounts = [0, 0, 0, 0, 0];
+
+  // Storing the mood for each date
+  final Map<DateTime, int> moodData = {};
+
+  void _updateMood(int index) {
+    setState(() {
+      if (!moodData.containsKey(_selectedDay)) {
+        _selectedMood = index;
+        moodCounts[index] += 1; // Increment the count of the selected mood
+        moodData[_selectedDay] = index; // Store the mood for the selected date
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String formattedDate = DateFormat.yMMMMd().format(DateTime.now());
+
+    return Scaffold(
+      backgroundColor: Colors.purple[50],
+      appBar: AppBar(
+        backgroundColor: Colors.purple,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Mood Tracker'),
+            Text(
+              formattedDate,
+              style: TextStyle(fontSize: 16, color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text(
+                      "How Do You Feel Today?",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.purple,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Icon(
+                      moodIcons[_selectedMood],
+                      color: Colors.yellow[600],
+                      size: 100,
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: List.generate(moods.length, (index) {
+                        return GestureDetector(
+                          onTap: () {
+                            _updateMood(
+                                index); // Update the mood count dynamically
+                          },
+                          child: Column(
+                            children: [
+                              Icon(
+                                moodIcons[index],
+                                color: _selectedMood == index
+                                    ? Colors.yellow[600]
+                                    : Colors.grey,
+                                size: 40,
+                              ),
+                              Text(
+                                moods[index],
+                                style: TextStyle(
+                                  color: _selectedMood == index
+                                      ? Colors.yellow[600]
+                                      : Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ),
+                    SizedBox(height: 20),
+                    if (moodData.containsKey(_selectedDay))
+                      Text(
+                        "Mood for today has already been set!",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 16,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+
+              // Mood Counter Widget with Custom Painter
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text(
+                      "Mood Count",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    Text(
+                      "Tap on mood to see more",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    CustomPaint(
+                      size: Size(100, 100),
+                      painter: MoodPieChartPainter(moodCounts),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: List.generate(moods.length, (index) {
+                        return Column(
+                          children: [
+                            Stack(
+                              alignment: Alignment.topRight,
+                              children: [
+                                Icon(
+                                  moodIcons[index],
+                                  color: Colors.grey,
+                                  size: 40,
+                                ),
+                                if (moodCounts[index] > 0)
+                                  CircleAvatar(
+                                    radius: 10,
+                                    backgroundColor: Colors.orange,
+                                    child: Text(
+                                      moodCounts[index].toString(),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            Text(
+                              moods[index],
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+
+              // Calendar Widget
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text(
+                      "Mood Calendar",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    TableCalendar(
+                      focusedDay: _selectedDay,
+                      firstDay: DateTime.utc(2020, 10, 16),
+                      lastDay: DateTime.utc(2030, 3, 14),
+                      calendarStyle: CalendarStyle(
+                        markerDecoration: BoxDecoration(
+                          color: Colors.purple,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      selectedDayPredicate: (day) {
+                        return isSameDay(_selectedDay, day);
+                      },
+                      onDaySelected: (selectedDay, focusedDay) {
+                        setState(() {
+                          _selectedDay = selectedDay;
+                        });
+                      },
+                      calendarBuilders: CalendarBuilders(
+                        singleMarkerBuilder: (context, date, events) {
+                          int? moodIndex = moodData[date];
+                          if (moodIndex != null) {
+                            return Container(
+                              width: 24,
+                              height: 24,
+                              decoration: BoxDecoration(
+                                color: moodColors[moodIndex],
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  moodIcons[moodIndex],
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                            );
+                          }
+                          return Container(); // No mood recorded for this day
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.purple,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey[500],
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Today',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_hospital),
+            label: 'Therapy',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Experts',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MoodPieChartPainter extends CustomPainter {
+  final List<int> moodCounts;
+  final List<Color> moodColors = [
+    Colors.orange,
+    Colors.green,
+    Colors.purple,
+    Colors.red,
+    Colors.blue,
+  ];
+
+  MoodPieChartPainter(this.moodCounts);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double total = moodCounts.reduce((a, b) => a + b).toDouble();
+    if (total == 0) return;
+    // Avoid division by zero if there are no mood entries
+
+    double startAngle = -pi / 2;
+    final paint = Paint()..style = PaintingStyle.fill;
+
+    for (int i = 0; i < moodCounts.length; i++) {
+      final sweepAngle = (moodCounts[i] / total) * 2 * pi;
+      paint.color = moodColors[i];
+      canvas.drawArc(
+        Rect.fromCircle(
+            center: Offset(size.width / 2, size.height / 2),
+            radius: size.width / 2),
+        startAngle,
+        sweepAngle,
+        true,
+        paint,
+      );
+      startAngle += sweepAngle;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+}
