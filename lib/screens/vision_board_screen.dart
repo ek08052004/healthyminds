@@ -12,9 +12,11 @@ class _VisionBoardScreenState extends State<VisionBoardScreen> {
   List<VisionImage> _images = [];
 
   void _addImage(String path) {
-    setState(() {
-      _images.add(VisionImage(path: path));
-    });
+    if (_images.length < 6) {  // Limit the number of images to 6
+      setState(() {
+        _images.add(VisionImage(path: path));
+      });
+    }
   }
 
   @override
@@ -23,20 +25,31 @@ class _VisionBoardScreenState extends State<VisionBoardScreen> {
       appBar: AppBar(
         title: Text('My Vision Board'),
       ),
-      body: _images.isEmpty
-          ? Center(
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/memoryframes.jpg'), // Background image
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          if (_images.isEmpty)
+            Center(
               child: Text('No images yet, add some!'),
             )
-          : Container(
-              color: Colors.green[100], // Green background for the vision board
-              child: ImageGrid(images: _images),
-            ),
+          else
+            ImageGrid(images: _images), // Display images on the frames
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final imagePath = await Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => UploadImageScreen(imageCount: _images.length)),
+              builder: (context) => UploadImageScreen(imageCount: _images.length),
+            ),
           );
 
           if (imagePath != null) {
