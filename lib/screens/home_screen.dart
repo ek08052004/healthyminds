@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'vision_board_screen.dart';
 import 'mood_tracker_screen.dart'; // Import MoodTrackerScreen
+import 'future_letter_screen.dart'; // Import FutureLetterScreen
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -35,6 +36,18 @@ class HomeScreen extends StatelessWidget {
                 );
               },
               child: Text('Go to Mood Tracker'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FutureLetterScreen(),
+                  ),
+                );
+              },
+              child: Text('Write a Future Letter'),
             ),
           ],
         ),
