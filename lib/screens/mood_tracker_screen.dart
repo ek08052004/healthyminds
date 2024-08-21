@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:math';
 import 'package:intl/intl.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class MoodTrackerScreen extends StatefulWidget {
   @override
@@ -28,18 +29,16 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
     Colors.blue,
   ];
 
-  // Mood counts stored dynamically
   final List<int> moodCounts = [0, 0, 0, 0, 0];
 
-  // Storing the mood for each date
   final Map<DateTime, int> moodData = {};
 
   void _updateMood(int index) {
     setState(() {
       if (!moodData.containsKey(_selectedDay)) {
         _selectedMood = index;
-        moodCounts[index] += 1; // Increment the count of the selected mood
-        moodData[_selectedDay] = index; // Store the mood for the selected date
+        moodCounts[index] += 1;
+        moodData[_selectedDay] = index;
       }
     });
   }
@@ -103,8 +102,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                       children: List.generate(moods.length, (index) {
                         return GestureDetector(
                           onTap: () {
-                            _updateMood(
-                                index); // Update the mood count dynamically
+                            _updateMood(index);
                           },
                           child: Column(
                             children: [
@@ -141,8 +139,6 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                 ),
               ),
               SizedBox(height: 20),
-
-              // Mood Counter Widget with Custom Painter
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -176,7 +172,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                     SizedBox(height: 20),
                     CustomPaint(
                       size: Size(100, 100),
-                      painter: MoodPieChartPainter(moodCounts),
+                      painter: MoodPieChartPainter(moodCounts, moodColors),
                     ),
                     SizedBox(height: 20),
                     Row(
@@ -221,8 +217,6 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                 ),
               ),
               SizedBox(height: 20),
-
-              // Calendar Widget
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -285,9 +279,42 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                               ),
                             );
                           }
-                          return Container(); // No mood recorded for this day
+                          return Container();
                         },
                       ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "MOOD GRAPH",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      height: 300, // Adjust height as needed
+                      child: MoodGraph(moodData: moodData, moodColors: moodColors, moodIcons: moodIcons),
                     ),
                   ],
                 ),
@@ -307,15 +334,11 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_hospital),
-            label: 'Therapy',
+            label: 'Health',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Experts',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
       ),
@@ -325,32 +348,23 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
 
 class MoodPieChartPainter extends CustomPainter {
   final List<int> moodCounts;
-  final List<Color> moodColors = [
-    Colors.orange,
-    Colors.green,
-    Colors.purple,
-    Colors.red,
-    Colors.blue,
-  ];
+  final List<Color> moodColors;
 
-  MoodPieChartPainter(this.moodCounts);
+  MoodPieChartPainter(this.moodCounts, this.moodColors);
 
   @override
   void paint(Canvas canvas, Size size) {
-    double total = moodCounts.reduce((a, b) => a + b).toDouble();
-    if (total == 0) return;
-    // Avoid division by zero if there are no mood entries
+    final double total = moodCounts.reduce((a, b) => a + b).toDouble();
+    final double radius = min(size.width / 2, size.height / 2);
+    final Paint paint = Paint()
+      ..style = PaintingStyle.fill;
 
-    double startAngle = -pi / 2;
-    final paint = Paint()..style = PaintingStyle.fill;
-
+    double startAngle = 0.0;
     for (int i = 0; i < moodCounts.length; i++) {
-      final sweepAngle = (moodCounts[i] / total) * 2 * pi;
+      final double sweepAngle = (moodCounts[i] / total) * 2 * pi;
       paint.color = moodColors[i];
       canvas.drawArc(
-        Rect.fromCircle(
-            center: Offset(size.width / 2, size.height / 2),
-            radius: size.width / 2),
+        Rect.fromLTWH(0, 0, size.width, size.height),
         startAngle,
         sweepAngle,
         true,
@@ -361,7 +375,89 @@ class MoodPieChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class MoodGraph extends StatelessWidget {
+  final Map<DateTime, int> moodData;
+  final List<Color> moodColors;
+  final List<IconData> moodIcons;
+
+  MoodGraph({required this.moodData, required this.moodColors, required this.moodIcons});
+
+  @override
+  Widget build(BuildContext context) {
+    List<FlSpot> spots = [];
+    List<DateTime> dates = moodData.keys.toList();
+    dates.sort();
+    for (int i = 0; i < dates.length; i++) {
+      DateTime date = dates[i];
+      int moodIndex = moodData[date]!;
+      spots.add(
+        FlSpot(i.toDouble(), moodIndex.toDouble()),
+      );
+    }
+
+    return LineChart(
+      LineChartData(
+        gridData: FlGridData(show: false),
+        titlesData: FlTitlesData(
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 40,
+              getTitlesWidget: (value, meta) {
+                DateTime date = dates[value.toInt()];
+                return SideTitleWidget(
+                  axisSide: meta.axisSide,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0), // Add padding here
+                    child: Text(
+                      DateFormat('MM/dd').format(date),
+                      style: TextStyle(fontSize: 12, color: Colors.black),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 40,
+              getTitlesWidget: (value, meta) {
+                int moodIndex = value.toInt();
+                if (moodIndex < 0 || moodIndex >= moodIcons.length) return Container();
+                return SideTitleWidget(
+                  axisSide: meta.axisSide,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0), // Add padding here
+                    child: Icon(
+                      moodIcons[moodIndex],
+                      color: moodColors[moodIndex],
+                      size: 20,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+        borderData: FlBorderData(show: false),
+        lineBarsData: [
+          LineChartBarData(
+            spots: spots,
+            isCurved: true,
+            color: Colors.blue,
+            dotData: FlDotData(show: false),
+            belowBarData: BarAreaData(show: false),
+          ),
+        ],
+        minX: 0,
+        maxX: (dates.length - 1).toDouble(),
+        minY: 0,
+        maxY: (moodIcons.length - 1).toDouble(),
+      ),
+    );
   }
 }
