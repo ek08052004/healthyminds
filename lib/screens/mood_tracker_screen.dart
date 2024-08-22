@@ -22,11 +22,11 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
     Icons.sentiment_very_dissatisfied
   ];
   final List<Color> moodColors = [
-    Colors.orange,
+    Colors.yellow,
     Colors.green,
     Colors.purple,
+    Colors.orange,
     Colors.red,
-    Colors.blue,
   ];
 
   final List<int> moodCounts = [0, 0, 0, 0, 0];
@@ -393,8 +393,22 @@ class MoodGraph extends StatelessWidget {
     for (int i = 0; i < dates.length; i++) {
       DateTime date = dates[i];
       int moodIndex = moodData[date]!;
+      double moodValue = 0;
+
+      if (moodIndex == 0) { // Rad
+        moodValue = 4.0; // Highest point
+      } else if (moodIndex == 1) { // Good
+        moodValue = 3.0; // High point
+      } else if (moodIndex == 2) { // Meh
+        moodValue = 2.0; // Middle point
+      } else if (moodIndex == 3) { // Bad
+        moodValue = 1.0; // Low point
+      } else if (moodIndex == 4) { // Awful
+        moodValue = 0.0; // Lowest point
+      }
+
       spots.add(
-        FlSpot(i.toDouble(), moodIndex.toDouble()),
+        FlSpot(i.toDouble(), moodValue),
       );
     }
 
@@ -411,7 +425,7 @@ class MoodGraph extends StatelessWidget {
                 return SideTitleWidget(
                   axisSide: meta.axisSide,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0), // Add padding here
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Text(
                       DateFormat('MM/dd').format(date),
                       style: TextStyle(fontSize: 12, color: Colors.black),
@@ -426,12 +440,12 @@ class MoodGraph extends StatelessWidget {
               showTitles: true,
               reservedSize: 40,
               getTitlesWidget: (value, meta) {
-                int moodIndex = value.toInt();
+                int moodIndex = 4 - value.toInt(); // Reverse the order
                 if (moodIndex < 0 || moodIndex >= moodIcons.length) return Container();
                 return SideTitleWidget(
                   axisSide: meta.axisSide,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0), // Add padding here
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Icon(
                       moodIcons[moodIndex],
                       color: moodColors[moodIndex],
@@ -442,21 +456,49 @@ class MoodGraph extends StatelessWidget {
               },
             ),
           ),
+          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
         borderData: FlBorderData(show: false),
         lineBarsData: [
           LineChartBarData(
             spots: spots,
             isCurved: true,
-            color: Colors.blue,
-            dotData: FlDotData(show: false),
+            gradient: LinearGradient(
+              colors: [
+                Colors.yellow, // Rad
+                Colors.green,  // Good
+                Colors.purple, // Meh
+                Colors.orange, // Bad
+                Colors.red,    // Awful
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
             belowBarData: BarAreaData(show: false),
           ),
         ],
         minX: 0,
         maxX: (dates.length - 1).toDouble(),
         minY: 0,
-        maxY: (moodIcons.length - 1).toDouble(),
+        maxY: 4, // Corresponds to Rad
+        lineTouchData: LineTouchData(enabled: false),
+        extraLinesData: ExtraLinesData(
+          extraLinesOnTop: false,
+          horizontalLines: [
+            HorizontalLine(
+              y: 2, // Center line for Meh mood
+              color: Colors.black,
+              dashArray: [5, 5],
+              label: HorizontalLineLabel(
+                show: true,
+                labelResolver: (line) => "Meh",
+                alignment: Alignment.bottomRight,
+                style: TextStyle(color: Colors.purple),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
