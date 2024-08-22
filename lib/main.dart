@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'screens/sign_up_screen.dart';
 import 'screens/splash_screen.dart';
 import 'screens/home_screen.dart'; // Import HomeScreen
 import 'screens/mood_tracker_screen.dart'; // Import MoodTrackerScreen

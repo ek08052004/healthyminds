@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../services/chat_moderation_service.dart'; // Import the moderation service
 
 class PublicChatRoomScreen extends StatefulWidget {
   @override
@@ -9,70 +8,31 @@ class PublicChatRoomScreen extends StatefulWidget {
 class _PublicChatRoomScreenState extends State<PublicChatRoomScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<String> _messages = [];
-  final ChatModerationService _moderationService = ChatModerationService();
 
-  void _sendMessage() async {
+  void _sendMessage() {
     String message = _controller.text;
 
     if (message.isNotEmpty) {
-      try {
-        bool isSafe = await _moderationService.isMessageSafe(message);
-
-        if (isSafe) {
-          setState(() {
-            _messages.add(message);
-            _controller.clear(); // Clear the input field after sending
-          });
-        } else {
-          _showWarningDialog(); // Show a warning if the message is harmful
-        }
-      } catch (e) {
-        // Handle any errors that occur during moderation
-        print("Error moderating message: $e");
-        _showErrorDialog();
-      }
+      setState(() {
+        _messages.add(message);
+        _controller.clear(); // Clear the input field after sending
+      });
     }
   }
 
-  void _showWarningDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Message Blocked'),
-          content: Text('Your message was blocked as it was deemed harmful.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+  void _sendFriendRequest(String message) {
+    // Implement the logic for sending a friend request
+    print('Friend request sent for message: $message');
   }
 
-  void _showErrorDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text(
-              'There was an error moderating your message. Please try again later.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+  void _reportMessage(String message) {
+    // Implement the logic for reporting the message
+    print('Message reported: $message');
+  }
+
+  void _blockUser(String message) {
+    // Implement the logic for blocking the user
+    print('User blocked for message: $message');
   }
 
   @override
@@ -88,7 +48,12 @@ class _PublicChatRoomScreenState extends State<PublicChatRoomScreen> {
               padding: const EdgeInsets.all(16.0),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
-                return ChatMessage(message: _messages[index]);
+                return ChatMessage(
+                  message: _messages[index],
+                  onSendFriendRequest: _sendFriendRequest,
+                  onReport: _reportMessage,
+                  onBlock: _blockUser,
+                );
               },
             ),
           ),
@@ -122,8 +87,16 @@ class _PublicChatRoomScreenState extends State<PublicChatRoomScreen> {
 
 class ChatMessage extends StatelessWidget {
   final String message;
+  final Function(String) onSendFriendRequest;
+  final Function(String) onReport;
+  final Function(String) onBlock;
 
-  ChatMessage({required this.message});
+  ChatMessage({
+    required this.message,
+    required this.onSendFriendRequest,
+    required this.onReport,
+    required this.onBlock,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -142,6 +115,36 @@ class ChatMessage extends StatelessWidget {
               ),
               child: Text(message),
             ),
+          ),
+          PopupMenuButton<String>(
+            onSelected: (String result) {
+              switch (result) {
+                case 'Send Friend Request':
+                  onSendFriendRequest(message);
+                  break;
+                case 'Report':
+                  onReport(message);
+                  break;
+                case 'Block':
+                  onBlock(message);
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'Send Friend Request',
+                child: Text('Send Friend Request'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Report',
+                child: Text('Report'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Block',
+                child: Text('Block'),
+              ),
+            ],
+            icon: Icon(Icons.more_vert),
           ),
         ],
       ),
