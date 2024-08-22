@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart'; // Import HomeScreen
+import 'screens/sign_up_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(), // Set HomeScreen as the home widget
+      home: SplashScreen(), // Set SignUpScreen as the home widget
     );
   }
 }
