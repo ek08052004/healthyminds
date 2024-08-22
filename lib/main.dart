@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'screens/sign_up_screen.dart';
 import 'screens/splash_screen.dart';
+import 'screens/home_screen.dart'; // Import HomeScreen
+import 'screens/mood_tracker_screen.dart'; // Import MoodTrackerScreen
+import 'screens/vision_board_screen.dart'; // Import VisionBoardScreen
+import 'screens/future_letter_screen.dart'; // Import FutureLetterScreen
+// Placeholder for ProfileScreen
 
 void main() {
   runApp(MyApp());
@@ -16,6 +21,16 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: SplashScreen(), // Set SignUpScreen as the home widget
+      initialRoute: '/home', // Set the initial route
+      routes: {
+        '/home': (context) => HomeScreen(),
+        // Placeholder, replace with actual implementation
+        '/tracker': (context) => MoodTrackerScreen(),
+        // Placeholder, replace with actual implementation
+        // Placeholder, replace with actual implementation
+        '/vision': (context) => VisionBoardScreen(),
+        '/memory': (context) => FutureLetterScreen(),
+      },
     );
   }
 }
