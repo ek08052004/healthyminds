@@ -6,7 +6,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Simulate a network call or async operation to check authentication status
-    Future.delayed(Duration(seconds: 2), () async {
+    Future.delayed(Duration(seconds: 0), () async {
       // Replace this with your actual authentication logic
       bool isLoggedIn = await checkIfLoggedIn();
 
@@ -27,7 +27,7 @@ class SplashScreen extends StatelessWidget {
 
   Future<bool> checkIfLoggedIn() async {
     // Simulate a delay for authentication check
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(seconds: 0));
     // Return true or false based on actual authentication status
     return false; // Replace with actual condition
   }
