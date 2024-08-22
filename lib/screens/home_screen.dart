@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts package
 import 'mood_tracker_screen.dart';
 import 'vision_board_screen.dart';
 import 'future_letter_screen.dart';
-import 'public_chat_room_screen.dart'; // Import PublicChatRoomScreen
+import 'public_chat_room_screen.dart'; // Import the Public Chat Room Screen
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -92,11 +92,11 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(height: 16), // Spacing between cards
                   _buildFeatureCard(
                     context,
-                    'Public Chat Room',
-                    'Join the chat room to interact with others.',
-                    Icons.chat,
+                    'Memory Lane',
+                    'Relive your favorite memories through this feature.',
+                    Icons.photo_album,
                     Colors.blue,
-                    PublicChatRoomScreen(), // Navigate to PublicChatRoomScreen
+                    FutureLetterScreen(), // Placeholder, adjust as necessary
                   ),
                   SizedBox(height: 16), // Spacing between cards
                   _buildFeatureCard(

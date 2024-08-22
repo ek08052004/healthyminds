@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'dart:math';
 import 'package:intl/intl.dart';
@@ -84,7 +85,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                   children: [
                     Text(
                       "How Do You Feel Today?",
-                      style: TextStyle(
+                      style: GoogleFonts.robotoSlab(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Colors.purple,
