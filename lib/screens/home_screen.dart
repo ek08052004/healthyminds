@@ -107,6 +107,15 @@ class HomeScreen extends StatelessWidget {
                     Colors.purple,
                     FutureLetterScreen(), // Placeholder, adjust as necessary
                   ),
+                  SizedBox(height: 16), // Spacing between cards
+                  _buildFeatureCard(
+                    context,
+                    'Public Chat Room',
+                    'Join the public chat room to connect with others.',
+                    Icons.chat,
+                    Colors.red,
+                    PublicChatRoomScreen(), // Navigate to the Public Chat Room
+                  ),
                 ],
               ),
             ),
