@@ -34,16 +34,10 @@ dependencies:
   fl_chart: ^0.68.0 
   intl: ^0.19.0
   google_fonts: ^4.0.4
- 
-
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  http: ^0.13.6
   cupertino_icons: ^1.0.6
   image_picker: ^0.8.5+3
   image_grid: ^0.0.7+3
-  
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +68,7 @@ flutter:
      - assets/images/hopeful_hearts.jpg
      - assets/images/calm_minds.jpg
      - assets/images/serene_souls.jpg
+     - assets/images/MY GOALS (1).png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
