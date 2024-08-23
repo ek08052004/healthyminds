@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'sign_up_screen.dart'; // Import the SignUpScreen
+import 'sign_up_screen.dart';
+import 'home_screen.dart';
+import '../api/service.dart'; // Import your API service
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -8,8 +10,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController(); // Changed from usernameController to emailController
   final _passwordController = TextEditingController();
+  final ApiService _apiService = ApiService(); // Instantiate the API service
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +26,15 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
-                controller: _usernameController,
+                controller: _emailController, // Changed from usernameController to emailController
                 decoration: InputDecoration(
-                  labelText: 'Username',
+                  labelText: 'Email ID',
                   border: OutlineInputBorder(),
                 ),
+                keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your username';
+                    return 'Please enter your email';
                   }
                   return null;
                 },
@@ -52,11 +56,26 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
-                    // Handle login action
-                    print('Login button pressed');
-                    // Navigate to the home screen or perform login action
+                    try {
+                      final token = await _apiService.login(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      );
+                      // Save the token and navigate to the home screen
+                      print('Token: $token');
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                      );
+                    } catch (e) {
+                      // Handle error (e.g., show an error message)
+                      print('Error: $e');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(e.toString())),
+                      );
+                    }
                   }
                 },
                 child: Text('Log In'),
