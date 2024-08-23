@@ -97,6 +97,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (_formKey.currentState?.validate() ?? false) {
+                                  // Navigate to home screen immediately
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => HomeScreen(),
+                                    ),
+                                  );
+
                                   try {
                                     await _apiService.signUp(
                                       name: _nameController.text,
@@ -106,17 +114,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       password: _passwordController.text,
                                       age: int.parse(_ageController.text),
                                     );
-                                    // Navigate to home screen after successful sign-up
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomeScreen()),
-                                    );
                                   } catch (e) {
                                     // Handle error (e.g., show an error message)
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Error: ${e.toString()}')),
+                                      SnackBar(
+                                        content: Text('Error: ${e.toString()}'),
+                                      ),
                                     );
+                                    // Optionally, navigate back to the sign-up screen or show an error
                                   }
                                 }
                               },
