@@ -315,7 +315,10 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                     SizedBox(height: 20),
                     Container(
                       height: 300, // Adjust height as needed
-                      child: MoodGraph(moodData: moodData, moodColors: moodColors, moodIcons: moodIcons),
+                      child: MoodGraph(
+                          moodData: moodData,
+                          moodColors: moodColors,
+                          moodIcons: moodIcons),
                     ),
                   ],
                 ),
@@ -356,9 +359,8 @@ class MoodPieChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final double total = moodCounts.reduce((a, b) => a + b).toDouble();
-    final double radius = min(size.width / 2, size.height / 2);
-    final Paint paint = Paint()
-      ..style = PaintingStyle.fill;
+    // final double radius = min(size.width / 2, size.height / 2);
+    final Paint paint = Paint()..style = PaintingStyle.fill;
 
     double startAngle = 0.0;
     for (int i = 0; i < moodCounts.length; i++) {
@@ -384,7 +386,10 @@ class MoodGraph extends StatelessWidget {
   final List<Color> moodColors;
   final List<IconData> moodIcons;
 
-  MoodGraph({required this.moodData, required this.moodColors, required this.moodIcons});
+  MoodGraph(
+      {required this.moodData,
+      required this.moodColors,
+      required this.moodIcons});
 
   @override
   Widget build(BuildContext context) {
@@ -396,15 +401,20 @@ class MoodGraph extends StatelessWidget {
       int moodIndex = moodData[date]!;
       double moodValue = 0;
 
-      if (moodIndex == 0) { // Rad
+      if (moodIndex == 0) {
+        // Rad
         moodValue = 4.0; // Highest point
-      } else if (moodIndex == 1) { // Good
+      } else if (moodIndex == 1) {
+        // Good
         moodValue = 3.0; // High point
-      } else if (moodIndex == 2) { // Meh
+      } else if (moodIndex == 2) {
+        // Meh
         moodValue = 2.0; // Middle point
-      } else if (moodIndex == 3) { // Bad
+      } else if (moodIndex == 3) {
+        // Bad
         moodValue = 1.0; // Low point
-      } else if (moodIndex == 4) { // Awful
+      } else if (moodIndex == 4) {
+        // Awful
         moodValue = 0.0; // Lowest point
       }
 
@@ -442,7 +452,8 @@ class MoodGraph extends StatelessWidget {
               reservedSize: 40,
               getTitlesWidget: (value, meta) {
                 int moodIndex = 4 - value.toInt(); // Reverse the order
-                if (moodIndex < 0 || moodIndex >= moodIcons.length) return Container();
+                if (moodIndex < 0 || moodIndex >= moodIcons.length)
+                  return Container();
                 return SideTitleWidget(
                   axisSide: meta.axisSide,
                   child: Padding(
@@ -468,10 +479,10 @@ class MoodGraph extends StatelessWidget {
             gradient: LinearGradient(
               colors: [
                 Colors.yellow, // Rad
-                Colors.green,  // Good
+                Colors.green, // Good
                 Colors.purple, // Meh
                 Colors.orange, // Bad
-                Colors.red,    // Awful
+                Colors.red, // Awful
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
