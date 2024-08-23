@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
 import 'home_screen.dart';
+import 'loading_screen.dart';
 import '../api/service.dart'; // Import your API service
 
 class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key, required this.controller});
+  final PageController controller;
+
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
@@ -21,99 +24,158 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sign Up')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTextField(
-                  _nameController, 'Name', 'Please enter your name'),
-              SizedBox(height: 16),
-              _buildTextField(
-                _ageController,
-                'Age',
-                'Please enter your age',
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your age';
-                  }
-                  final intValue = int.tryParse(value);
-                  if (intValue == null || intValue < 0) {
-                    return 'Please enter a valid age';
-                  }
-                  return null;
-                },
+              Padding(
+                padding: const EdgeInsets.only(top: 0),
+                child: Image.asset(
+                  "assets/images/vector-2.png",
+                  width: MediaQuery.of(context).size.width,
+                  height: 300,
+                  fit: BoxFit.cover,
+                ),
               ),
-              SizedBox(height: 16),
-              _buildTextField(
-                _usernameController,
-                'Username',
-                'Please enter your username',
-              ),
-              SizedBox(height: 16),
-              _buildTextField(
-                _passwordController,
-                'Password',
-                'Please enter your password',
-                obscureText: true,
-              ),
-              SizedBox(height: 16),
-              _buildTextField(
-                _emailController,
-                'Email ID',
-                'Please enter your email',
-                keyboardType: TextInputType.emailAddress,
-              ),
-              SizedBox(height: 16),
-              _buildTextField(
-                _phoneController,
-                'Phone Number',
-                'Please enter your phone number',
-                keyboardType: TextInputType.phone,
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    try {
-                      final success = await _apiService.signUp(
-                        name: _nameController.text,
-                        age: int.parse(_ageController.text),
-                        username: _usernameController.text,
-                        email: _emailController.text,
-                        phone: _phoneController.text,
-                        password: _passwordController.text,
-                      );
-                      if (success) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomeScreen()),
-                        );
-                      }
-                    } catch (e) {
-                      // Handle error (e.g., show an error message)
-                      print('Error: $e');
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(e.toString())),
-                      );
-                    }
-                  }
-                },
-                child: Text('Sign Up'),
-              ),
-              SizedBox(height: 16),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  );
-                },
-                child: Text('Already have an account? Log In'),
+              const SizedBox(height: 18),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Sign up',
+                    style: TextStyle(
+                      color: Color(0xFF755DC1),
+                      fontSize: 27,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        _buildTextField(
+                          controller: _nameController,
+                          label: 'Name',
+                          errorMessage: 'Please enter your name',
+                        ),
+                        _buildTextField(
+                          controller: _emailController,
+                          label: 'Email',
+                          errorMessage: 'Please enter your email',
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                        _buildTextField(
+                          controller: _usernameController,
+                          label: 'Username',
+                          errorMessage: 'Please enter your username',
+                        ),
+                        _buildTextField(
+                          controller: _phoneController,
+                          label: 'Phone Number',
+                          errorMessage: 'Please enter your phone number',
+                        ),
+                        _buildTextField(
+                          controller: _passwordController,
+                          label: 'Password',
+                          errorMessage: 'Please enter your password',
+                          obscureText: true,
+                        ),
+                        _buildTextField(
+                          controller: _ageController,
+                          label: 'Age',
+                          errorMessage: 'Please enter your age',
+                        ),
+                        const SizedBox(height: 20),
+                        Center(
+                          child: SizedBox(
+                            width: 329,
+                            height: 56,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
+                                  // Navigate to home screen immediately
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LoadingScreen(),
+                                    ),
+                                  );
+
+                                  try {
+                                    await _apiService.signUp(
+                                      name: _nameController.text,
+                                      email: _emailController.text,
+                                      username: _usernameController.text,
+                                      phone: _phoneController.text,
+                                      password: _passwordController.text,
+                                      age: int.parse(_ageController.text),
+                                    );
+                                  } catch (e) {
+                                    // Handle error (e.g., show an error message)
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Error: ${e.toString()}'),
+                                      ),
+                                    );
+                                    // Optionally, navigate back to the sign-up screen or show an error
+                                  }
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF9F7BFF),
+                              ),
+                              child: const Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 25),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Already have an account?',
+                              style: TextStyle(
+                                color: Color(0xFF837E93),
+                                fontSize: 13,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(width: 2.5),
+                            InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text(
+                                'Log In',
+                                style: TextStyle(
+                                  color: Color(0xFF755DC1),
+                                  fontSize: 13,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -122,29 +184,56 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildTextField(
-    TextEditingController controller,
-    String label,
-    String errorMessage, {
-    bool obscureText = false,
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required String errorMessage,
     TextInputType keyboardType = TextInputType.text,
-    String? Function(String?)? validator,
+    bool obscureText = false,
   }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: TextFormField(
+        controller: controller,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          color: Color(0xFF393939),
+          fontSize: 13,
+          fontFamily: 'Poppins',
+          fontWeight: FontWeight.w400,
+        ),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(
+            color: Color(0xFF755DC1),
+            fontSize: 15,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w600,
+          ),
+          enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide(
+              width: 1,
+              color: Color(0xFF837E93),
+            ),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide(
+              width: 1,
+              color: Color(0xFF9F7BFF),
+            ),
+          ),
+        ),
+        keyboardType: keyboardType,
+        obscureText: obscureText,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return errorMessage;
+          }
+          return null;
+        },
       ),
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      validator: validator ??
-          (value) {
-            if (value == null || value.isEmpty) {
-              return errorMessage;
-            }
-            return null;
-          },
     );
   }
 }

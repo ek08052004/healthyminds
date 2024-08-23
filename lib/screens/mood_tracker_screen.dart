@@ -86,7 +86,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                     Text(
                       "How Do You Feel Today?",
                       style: GoogleFonts.robotoSlab(
-                        fontSize: 24,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.purple,
                       ),
@@ -305,9 +305,9 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "MOOD GRAPH",
+                      "Mood Graph",
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
                       ),
