@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import 'loading_screen.dart';
 import '../api/service.dart'; // Import your API service
 
 class SignUpScreen extends StatefulWidget {
@@ -96,12 +97,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             height: 56,
                             child: ElevatedButton(
                               onPressed: () async {
-                                if (_formKey.currentState?.validate() ?? false) {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
                                   // Navigate to home screen immediately
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => HomeScreen(),
+                                      builder: (context) => LoadingScreen(),
                                     ),
                                   );
 

@@ -135,7 +135,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 30),
                     Center(
                       child: ClipRRect(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         child: SizedBox(
                           width: 329,
                           height: 56,
@@ -198,7 +199,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SignUpScreen(controller: widget.controller)),
+                                  builder: (context) => SignUpScreen(
+                                      controller: widget.controller)),
                             );
                           },
                           child: const Text(

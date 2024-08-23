@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
         '/tracker': (context) => MoodTrackerScreen(),
         '/vision': (context) => VisionBoardScreen(),
         '/memory': (context) => FutureLetterScreen(),
-        '/chat': (context) => PublicChatRoomScreen(), // Add PublicChatRoomScreen route
       },
     );
   }

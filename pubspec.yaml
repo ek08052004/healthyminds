@@ -66,6 +66,9 @@ flutter:
   assets:
      - assets/images/safteypingreen.jpg
      - assets/images/memoryframes.jpg
+     - assets/images/hopeful_hearts.jpg
+     - assets/images/calm_minds.jpg
+     - assets/images/serene_souls.jpg
      - assets/images/MY GOALS (1).png
 
   # An image asset can refer to one or more resolution-specific "variants", see
