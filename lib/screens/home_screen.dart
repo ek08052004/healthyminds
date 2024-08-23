@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts package
+import 'package:google_fonts/google_fonts.dart';
 import 'mood_tracker_screen.dart';
 import 'vision_board_screen.dart';
 import 'future_letter_screen.dart';
-import 'public_chat_room_screen.dart'; // Import the Public Chat Room Screen
+import 'public_chat_room_screen.dart';
+import 'educational_resources_screen.dart';
+import 'community_screen.dart'; // Import the Community Screen
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(''),
+        title: Text('Home', style: GoogleFonts.oswald()),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
           // Welcome Message Section
           Container(
@@ -45,87 +46,64 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
 
-          // Tools Section
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            color: Colors.grey[200],
-            child: Row(
+          // Feature Cards Section
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
               children: [
-                Icon(Icons.build, color: Colors.blueGrey, size: 24),
-                SizedBox(width: 8),
-                Text(
-                  'OUR TOOLS',
-                  style: GoogleFonts.playfairDisplay(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blueGrey[800],
-                  ),
+                _buildFeatureCard(
+                  context,
+                  'Mood Tracker',
+                  'Track your daily moods and see the trend.',
+                  Icons.sentiment_satisfied,
+                  Colors.lightGreen,
+                  MoodTrackerScreen(),
+                ),
+                SizedBox(height: 16), // Spacing between cards
+                _buildFeatureCard(
+                  context,
+                  'Vision Board',
+                  'Create a board of your future goals and dreams.',
+                  Icons.pin_drop_rounded,
+                  Colors.orange,
+                  VisionBoardScreen(),
+                ),
+                SizedBox(height: 16), // Spacing between cards
+                _buildFeatureCard(
+                  context,
+                  'Memory Lane',
+                  'Relive your favorite memories through this feature.',
+                  Icons.photo_album,
+                  Colors.blue,
+                  FutureLetterScreen(), // Placeholder, adjust as necessary
+                ),
+                SizedBox(height: 16), // Spacing between cards
+                _buildFeatureCard(
+                  context,
+                  'Educational Resources',
+                  'Access various mental health resources.',
+                  Icons.book,
+                  Colors.purple,
+                  EducationalResourcesScreen(), // Navigate to Educational Resources Screen
+                ),
+                SizedBox(height: 16), // Spacing between cards
+                _buildFeatureCard(
+                  context,
+                  'Communities',
+                  'Join various communities to find support.',
+                  Icons.people,
+                  Colors.teal,
+                  CommunityScreen(), // Navigate to the Communities Screen
                 ),
               ],
-            ),
-          ),
-
-          // Feature Cards Section
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ListView(
-                children: [
-                  _buildFeatureCard(
-                    context,
-                    'Mood Tracker',
-                    'Track your daily moods and see the trend.',
-                    Icons.sentiment_satisfied,
-                    Colors.lightGreen,
-                    MoodTrackerScreen(),
-                  ),
-                  SizedBox(height: 16), // Spacing between cards
-                  _buildFeatureCard(
-                    context,
-                    'Vision Board',
-                    'Create a board of your future goals and dreams.',
-                    Icons.pin_drop_rounded,
-                    Colors.orange,
-                    VisionBoardScreen(),
-                  ),
-                  SizedBox(height: 16), // Spacing between cards
-                  _buildFeatureCard(
-                    context,
-                    'Memory Lane',
-                    'Relive your favorite memories through this feature.',
-                    Icons.photo_album,
-                    Colors.blue,
-                    FutureLetterScreen(), // Placeholder, adjust as necessary
-                  ),
-                  SizedBox(height: 16), // Spacing between cards
-                  _buildFeatureCard(
-                    context,
-                    'Educational Resources',
-                    'Access various mental health resources.',
-                    Icons.book,
-                    Colors.purple,
-                    FutureLetterScreen(), // Placeholder, adjust as necessary
-                  ),
-                  SizedBox(height: 16), // Spacing between cards
-                  _buildFeatureCard(
-                    context,
-                    'Public Chat Room',
-                    'Join the public chat room to connect with others.',
-                    Icons.chat,
-                    Colors.red,
-                    PublicChatRoomScreen(), // Navigate to the Public Chat Room
-                  ),
-                ],
-              ),
             ),
           ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.purple, // Set the background color to purple
-        selectedItemColor: Colors.purple, // Color of selected item
-        unselectedItemColor: Colors.purple, // Color of unselected items
+        selectedItemColor: Colors.white, // Color of selected item
+        unselectedItemColor: Colors.white70, // Color of unselected items
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

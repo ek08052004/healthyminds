@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
+import 'sign_up_screen.dart';
 import 'home_screen.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -13,7 +14,7 @@ class SplashScreen extends StatelessWidget {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => isLoggedIn ? HomeScreen() : LoginScreen(),
+          builder: (context) => isLoggedIn ? HomeScreen() : SignUpScreen(),
         ),
       );
     });

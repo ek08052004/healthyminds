@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class PublicChatRoomScreen extends StatefulWidget {
+  final String communityName; // Add the communityName parameter
+
+  PublicChatRoomScreen({required this.communityName}); // Update the constructor
+
   @override
   _PublicChatRoomScreenState createState() => _PublicChatRoomScreenState();
 }
@@ -39,7 +43,8 @@ class _PublicChatRoomScreenState extends State<PublicChatRoomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Public Chat Room'),
+        title: Text(
+            '${widget.communityName} Chat Room'), // Use the communityName parameter
       ),
       body: Column(
         children: [
