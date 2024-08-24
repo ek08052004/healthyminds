@@ -30,15 +30,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 0),
-                child: Image.asset(
-                  "assets/images/vector-2.png",
-                  width: MediaQuery.of(context).size.width,
-                  height: 300,
-                  fit: BoxFit.cover,
-                ),
-              ),
               const SizedBox(height: 18),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,9 +87,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             height: 56,
                             child: ElevatedButton(
                               onPressed: () async {
-                                if (_formKey.currentState?.validate() ??
-                                    false) {
-                                  // Navigate to home screen immediately
+                                if (_formKey.currentState?.validate() ?? false) {
+                                  // Navigate to loading screen immediately
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(

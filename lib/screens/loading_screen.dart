@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'home_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void _navigateToHome() async {
-    await Future.delayed(Duration(seconds: 3), () {});
+    await Future.delayed(Duration(seconds: 5), () {});
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -29,19 +30,20 @@ class _LoadingScreenState extends State<LoadingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 50),
             Lottie.asset(
-              'assets/animations/animation.json', // Path to your Lottie animation JSON
+              'assets/animations/Animation4.json', // Path to your Lottie animation JSON
               width: 300,
               height: 300,
               fit: BoxFit.fill,
             ),
+            SizedBox(height: 30),
             Text(
-              'Welcome to the App',
-              style: TextStyle(
+              'Relax, Take A Deep Breadth',
+              style: GoogleFonts.lato(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),

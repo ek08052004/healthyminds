@@ -12,6 +12,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home', style: GoogleFonts.oswald()),
+        automaticallyImplyLeading: false, // Removes the back button
       ),
       body: ListView(
         children: [

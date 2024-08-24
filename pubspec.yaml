@@ -71,7 +71,9 @@ flutter:
      - assets/images/calm_minds.jpg
      - assets/images/serene_souls.jpg
      - assets/images/MY GOALS (1).png
-     - assets/animations/animation.json
+     - assets/animations/Animation4.json
+     - assets/images/login_image.png
+     - assets/animations/animation2.json
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
