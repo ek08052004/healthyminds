@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'mood_tracker_screen.dart';
 import 'vision_board_screen.dart';
 import 'future_letter_screen.dart';
-import 'public_chat_room_screen.dart';
 import 'educational_resources_screen.dart';
 import 'community_screen.dart'; // Import the Community Screen
 

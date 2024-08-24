@@ -39,6 +39,7 @@ dependencies:
   image_picker: ^0.8.5+3
   image_grid: ^0.0.7+3
   flutter_wall_layout: ^2.1.1
+  lottie: ^2.7.0
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,8 @@ flutter:
      - assets/images/calm_minds.jpg
      - assets/images/serene_souls.jpg
      - assets/images/MY GOALS (1).png
+     - assets/animations/animation.json
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

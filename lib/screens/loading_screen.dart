@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart'; // Import your HomeScreen
+import 'package:lottie/lottie.dart';
+import 'home_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -28,6 +29,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 50),
+            Lottie.asset(
+              'assets/animations/animation.json', // Path to your Lottie animation JSON
+              width: 300,
+              height: 300,
+              fit: BoxFit.fill,
+            ),
             Text(
               'Welcome to the App',
               style: TextStyle(
@@ -35,8 +43,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
-            CircularProgressIndicator(), // Loader during the waiting period
           ],
         ),
       ),
