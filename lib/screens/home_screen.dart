@@ -1,16 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts package
+import 'package:google_fonts/google_fonts.dart';
 import 'mood_tracker_screen.dart';
 import 'vision_board_screen.dart';
 import 'future_letter_screen.dart';
-import 'public_chat_room_screen.dart'; // Import the Public Chat Room Screen
+import 'chat_rooms_list_screen.dart'; // Updated import for the chat rooms list
+import '../utils/auth_utils.dart'; // Import AuthUtils for token checking
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    checkToken();
+  }
+
+  void checkToken() async {
+    bool tokenExists = await AuthUtils.isTokenStored();
+
+    if (tokenExists) {
+      print('Token is stored.');
+      // Proceed with authenticated actions or load home screen data
+    } else {
+      print('No token found.');
+      // Redirect to login or show a login screen
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(''),
+        title: Text('Home'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,8 +72,7 @@ class HomeScreen extends StatelessWidget {
 
           // Tools Section
           Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             color: Colors.grey[200],
             child: Row(
               children: [
@@ -110,11 +134,11 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(height: 16), // Spacing between cards
                   _buildFeatureCard(
                     context,
-                    'Public Chat Room',
-                    'Join the public chat room to connect with others.',
+                    'Chat Rooms',
+                    'Join and chat in public rooms.',
                     Icons.chat,
                     Colors.red,
-                    PublicChatRoomScreen(), // Navigate to the Public Chat Room
+                    ChatRoomsListScreen(), // Updated navigation to Chat Rooms List
                   ),
                 ],
               ),

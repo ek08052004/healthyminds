@@ -1,117 +1,110 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../utils/auth_utils.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://10.0.2.2:5000/api/auth';  
+  final String baseUrl = 'http://10.0.2.2:5000'; // Update with your server's URL
 
-  // Sign Up Method
-Future<bool> signUp({
-  required String name,
-  required int age,
-  required String username,
-  required String email,
-  required String phone,
-  required String password,
-}) async {
-  try {
-    final response = await http.post(
-      Uri.parse('$baseUrl/signup'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'name': name,
-        'age': age,
-        'username': username,
-        'email': email,
-        'phone': phone,
-        'password': password,
-      }),
-    );
-
-    // Print raw response body for debugging
-    print('Sign Up Response body: ${response.body}');
-    print('Status Code: ${response.statusCode}');
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      // Handle success
-      final data = jsonDecode(response.body);
-      print('Decoded data: $data');
-      if (data.containsKey('token')) {
-        // If token is present, return true
-        return true;
-      } else {
-        // If token is not present, log a message and return false
-        print('Sign up successful but token missing in response');
-        return false;
-      }
-    } else {
-      // Handle error response
-      final responseBody = response.body;
-      try {
-        final error = jsonDecode(responseBody);
-        String message = error['msg'] ?? 'Unknown error occurred';
-        print('Failed to sign up: $message');
-      } catch (e) {
-        // Catch JSON decode errors
-        print('Failed to sign up: Response format is invalid. Response: $responseBody');
-      }
-      return false;
-    }
-  } catch (e) {
-    print('Exception in sign up: $e');
-    // Handle any other exceptions
-    return false;
-  }
-}
-
-
-  // Log In Method
-  Future<String> login({
+  Future<bool> signUp({
+    required String name,
+    required String username,
     required String email,
     required String password,
+    String? phone,
+    String? pic,
   }) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/login'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'email': email,
-          'password': password,
-        }),
-      );
+    var url = Uri.parse('$baseUrl/api/user');
+    
+    var body = {
+      'name': name,
+      'username': username,
+      'email': email,
+      'password': password,
+      if (phone != null) 'phone': phone,
+      if (pic != null) 'pic': pic,
+    };
 
-      // Print raw response body for debugging
-      print('Login Response body: ${response.body}');
+    var response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        if (data.containsKey('token')) {
-          return data['token'];
-        } else {
-          throw Exception('Failed to log in: Token not found in response');
-        }
-      } else {
-        // Handle error response
-        final responseBody = response.body;
-        try {
-          final error = jsonDecode(responseBody);
-          String message = error['msg'] ?? 'Unknown error occurred';
-          throw Exception('Failed to log in: $message');
-        } catch (e) {
-          // Catch JSON decode errors
-          throw Exception('Failed to log in: Response format is invalid. Response: $responseBody');
-        }
-      }
-    } catch (e) {
-      print('Exception in login: $e');
-      if (e is FormatException) {
-        throw Exception('Failed to log in: Response format is invalid');
-      }
-      throw Exception('Failed to log in: $e');
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      throw Exception('Failed to sign up: ${response.body}');
     }
   }
+
+  Future<bool> login({required String email, required String password}) async {
+    var url = Uri.parse('$baseUrl/api/user/login');
+    var response = await http.post(
+      url,
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      // Parse the response body to get the token
+      var responseData = jsonDecode(response.body);
+      var token = responseData['token'];
+
+      // Store the token securely
+      await AuthUtils.storeAuthToken(token);
+
+      return true;
+    } else {
+      throw Exception('Failed to log in: ${response.body}');
+    }
+  }
+
+  Future<http.Response> get(String endpoint) async {
+    final token = await AuthUtils.getAuthToken();
+
+    if (token == null) {
+      throw Exception('No authentication token found.');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl$endpoint'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    return response;
+  }
+
+  Future<http.Response> post(String endpoint, {required Map<String, dynamic> body}) async {
+    final token = await AuthUtils.getAuthToken();
+
+    if (token == null) {
+      throw Exception('No authentication token found.');
+    }
+
+    final response = await http.post(
+      Uri.parse('$baseUrl$endpoint'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(body),
+    );
+
+    return response;
+  }
 }
- 
+
+
