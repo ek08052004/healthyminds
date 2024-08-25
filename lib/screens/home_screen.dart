@@ -213,8 +213,9 @@ class _HomeScreenState extends State<HomeScreen>
                           moods[index],
                           style: TextStyle(
                             color: isSelected ? moodColors[index] : Colors.grey,
-                            fontWeight:
-                                isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         ),
                       ],
@@ -276,7 +277,8 @@ class _HomeScreenState extends State<HomeScreen>
                         context,
                         MaterialPageRoute(
                           builder: (context) => PublicChatRoomScreen(
-                            communityName: community.name, // Pass community name
+                            communityName:
+                                community.name, // Pass community name
                           ),
                         ),
                       );
@@ -444,38 +446,33 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
 
-            // Animation with Rounded Button
+// Box Around Animation and Button Below "Promise to Yourself"
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => VisionBoardScreen(),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
                     ),
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Lottie.asset(
-                        'assets/animations/animationvision.json',
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Lottie.asset(
+                        'assets/animations/animationvision.json', // Replace with your animation file
                         height: 200,
-                        width: 200,
+                        width: 250,
                       ),
-                      SizedBox(height: 16),
-                      ElevatedButton(
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
@@ -493,79 +490,95 @@ class _HomeScreenState extends State<HomeScreen>
                           );
                         },
                         child: Text(
-                          'Add a New Memory',
+                          'Add a New Memory!',
                           style: GoogleFonts.robotoCondensed(
                             textStyle: TextStyle(
-                              fontSize: 16,
+                              fontSize: 20,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
 
-            // Promise to Yourself Section
+// Box Around Animation Below "Promise to Yourself"
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    'Promise To Yourself!',
+                    'Promise To Yourself',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
-                    textAlign: TextAlign.left,
                   ),
-                  SizedBox(height: 10),
                 ],
               ),
             ),
 
-            // Added Animation Below "Promise to Yourself"
+// Box Around Animation and Button Below "Promise to Yourself"
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Lottie.asset(
-                'assets/animations/Animationfutureletter.json', // Replace with your animation file
-                height: 200,
-                width: 200,
-              ),
-            ),
-
-            // Rounded Write A Promise Button Below Animation
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  backgroundColor: Colors.blueAccent,
-                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FutureLetterScreen(),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Lottie.asset(
+                        'assets/animations/Animationfutureletter.json', // Replace with your animation file
+                        height: 200,
+                        width: 250,
+                      ),
                     ),
-                  );
-                },
-                child: Text(
-                  'Write A Promise',
-                  style: GoogleFonts.robotoCondensed(
-                    textStyle: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          backgroundColor: Colors.blueAccent,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 12),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FutureLetterScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Write a Promise!',
+                          style: GoogleFonts.robotoCondensed(
+                            textStyle: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
