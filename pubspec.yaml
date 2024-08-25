@@ -75,6 +75,8 @@ flutter:
      - assets/animations/Animation4.json
      - assets/images/login_image.png
      - assets/animations/animation2.json
+     - assets/animations/animationvision.json
+     - assets/animations/Animationfutureletter.json
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
