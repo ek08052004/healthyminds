@@ -1,130 +1,158 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'mood_tracker_screen.dart';
-import 'vision_board_screen.dart';
-import 'future_letter_screen.dart';
-import 'educational_resources_screen.dart';
-import 'community_screen.dart'; // Import the Community Screen
+import 'community_screen.dart';
+import 'public_chat_room_screen.dart';
+import 'mood_tracker_screen.dart'; // Ensure this is imported
 
 class HomeScreen extends StatelessWidget {
+  final List<Community> communities = [
+    Community(name: "Calm Minds", color: Colors.blueAccent),
+    Community(name: "Hopeful Hearts", color: Colors.pinkAccent),
+    Community(name: "Serene Souls", color: Colors.greenAccent),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home', style: GoogleFonts.oswald()),
-        automaticallyImplyLeading: false, // Removes the back button
+        title: Text('Home'),
       ),
       body: ListView(
         children: [
-          // Welcome Message Section
-          Container(
-            color: Colors.white, // White background
+          // Community Bar with See More Arrow
+          Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(height: 10),
                 Text(
-                  'Welcome Back Ekansh',
-                  style: GoogleFonts.oswald(
+                  'Communities',
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blueGrey[900],
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
-                  'Daily Tip: Remember to take deep breaths and relax today.',
-                  style: GoogleFonts.ptSansNarrow(
-                    fontSize: 16,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.grey[600],
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CommunityScreen()),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        'See More',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      Icon(Icons.arrow_forward, color: Colors.blue),
+                    ],
                   ),
                 ),
-                SizedBox(height: 20),
               ],
             ),
           ),
 
-          // Feature Cards Section
+          // Horizontal Slider for Community Cards with Snapping
+          Container(
+            height: 200, // Adjust the height as needed
+            child: PageView.builder(
+              controller: PageController(viewportFraction: 0.7),
+              itemCount: communities.length,
+              itemBuilder: (context, index) {
+                final community = communities[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PublicChatRoomScreen(
+                          communityName: community.name, // Pass community name
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 8.0),
+                    decoration: BoxDecoration(
+                      color: community.color,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        community.name,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+
+          // Horizontal Scroll for Other Feature Cards
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                _buildFeatureCard(
-                  context,
-                  'Mood Tracker',
-                  'Track your daily moods and see the trend.',
-                  Icons.sentiment_satisfied,
-                  Colors.lightGreen,
-                  MoodTrackerScreen(),
-                ),
-                SizedBox(height: 16), // Spacing between cards
-                _buildFeatureCard(
-                  context,
-                  'Vision Board',
-                  'Create a board of your future goals and dreams.',
-                  Icons.pin_drop_rounded,
-                  Colors.orange,
-                  VisionBoardScreen(),
-                ),
-                SizedBox(height: 16), // Spacing between cards
-                _buildFeatureCard(
-                  context,
-                  'Memory Lane',
-                  'Relive your favorite memories through this feature.',
-                  Icons.photo_album,
-                  Colors.blue,
-                  FutureLetterScreen(), // Placeholder, adjust as necessary
-                ),
-                SizedBox(height: 16), // Spacing between cards
-                _buildFeatureCard(
-                  context,
-                  'Educational Resources',
-                  'Access various mental health resources.',
-                  Icons.book,
-                  Colors.purple,
-                  EducationalResourcesScreen(), // Navigate to Educational Resources Screen
-                ),
-                SizedBox(height: 16), // Spacing between cards
-                _buildFeatureCard(
-                  context,
-                  'Communities',
-                  'Join various communities to find support.',
-                  Icons.people,
-                  Colors.teal,
-                  CommunityScreen(), // Navigate to the Communities Screen
-                ),
-              ],
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _buildFeatureCard(
+                    context,
+                    'Mood Tracker',
+                    'Track your daily moods and see the trend.',
+                    Icons.sentiment_satisfied,
+                    Colors.lightGreen,
+                    MoodTrackerScreen(),
+                  ),
+                  SizedBox(width: 10), // Space between cards
+                  _buildFeatureCard(
+                    context,
+                    'Vision Board',
+                    'Create and visualize your goals.',
+                    Icons.dashboard,
+                    Colors.orangeAccent,
+                    Container(), // Placeholder for Vision Board screen
+                  ),
+                  SizedBox(width: 10), // Space between cards
+                  _buildFeatureCard(
+                    context,
+                    'Daily Journal',
+                    'Write your thoughts and feelings.',
+                    Icons.book,
+                    Colors.purpleAccent,
+                    Container(), // Placeholder for Daily Journal screen
+                  ),
+                  // Add more feature cards here...
+                ],
+              ),
             ),
           ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.purple, // Set the background color to purple
-        selectedItemColor: Colors.white, // Color of selected item
-        unselectedItemColor: Colors.white70, // Color of unselected items
         items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Messages'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.message),
-            label: 'Messages',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.trending_up),
-            label: 'Tracker',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Resources',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
+              icon: Icon(Icons.trending_up), label: 'Tracker'),
+          BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Resources'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         onTap: (index) {
           switch (index) {
@@ -161,21 +189,20 @@ class HomeScreen extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => screen,
-          ),
+          MaterialPageRoute(builder: (context) => screen),
         );
       },
       child: Container(
+        width: 250, // Set a fixed width for the feature card
         padding: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(12), // Rounded corners
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3),
-              offset: Offset(0, 4),
               blurRadius: 6,
+              offset: Offset(0, 4),
             ),
           ],
         ),
@@ -187,8 +214,8 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.playfairDisplay(
-                      fontSize: 20, // Larger font size for the title
+                    style: TextStyle(
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -196,7 +223,7 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(height: 10),
                   Text(
                     description,
-                    style: GoogleFonts.ptSansNarrow(
+                    style: TextStyle(
                       fontSize: 14,
                       color: Colors.white70,
                     ),
@@ -204,11 +231,7 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(
-              icon,
-              color: Colors.white,
-              size: 50, // Adjust icon size for a balanced look
-            ),
+            Icon(icon, color: Colors.white, size: 50),
           ],
         ),
       ),

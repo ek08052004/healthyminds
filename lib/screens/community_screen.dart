@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'public_chat_room_screen.dart';
 
-// Define the Community class
 class Community {
   final String name;
   final Color color;
@@ -16,7 +15,6 @@ class CommunityScreen extends StatelessWidget {
     Community(name: "Serene Souls", color: Colors.greenAccent),
   ];
 
-  // Helper function to generate the image path
   String getImagePath(String communityName) {
     String formattedName = communityName.toLowerCase().replaceAll(' ', '_');
     return 'assets/images/$formattedName.jpg';
@@ -33,10 +31,10 @@ class CommunityScreen extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // 2 items per row
+            crossAxisCount: 2,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
-            childAspectRatio: 1.0, // Square-shaped items
+            childAspectRatio: 1.0,
           ),
           itemCount: communities.length,
           itemBuilder: (context, index) {
@@ -47,7 +45,7 @@ class CommunityScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => PublicChatRoomScreen(
-                      communityName: community.name, // Pass community name
+                      communityName: community.name,
                     ),
                   ),
                 );
@@ -58,27 +56,22 @@ class CommunityScreen extends StatelessWidget {
                 ),
                 child: Stack(
                   children: [
-                    // Background Image with reduced opacity
                     Opacity(
-                      opacity:
-                          0.6, // Adjust the opacity to make the image very light
+                      opacity: 0.6,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Image.asset(
-                          getImagePath(community
-                              .name), // Dynamically load background image
+                          getImagePath(community.name),
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: double.infinity,
                         ),
                       ),
                     ),
-                    // Community Name Text
                     Center(
                       child: Text(
                         community.name,
                         style: TextStyle(
-                          fontFamily: 'CustomFont', // Use custom font
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
