@@ -4,21 +4,26 @@ import 'public_chat_room_screen.dart';
 class Community {
   final String name;
   final Color color;
+  final String imagePath; // Property for the image path
 
-  Community({required this.name, required this.color});
+  Community({required this.name, required this.color, required this.imagePath});
 }
 
 class CommunityScreen extends StatelessWidget {
   final List<Community> communities = [
-    Community(name: "Calm Minds", color: Colors.blueAccent),
-    Community(name: "Hopeful Hearts", color: Colors.pinkAccent),
-    Community(name: "Serene Souls", color: Colors.greenAccent),
+    Community(
+        name: "Calm Minds",
+        color: Colors.blueAccent,
+        imagePath: 'assets/images/calm_minds.jpg'),
+    Community(
+        name: "Hopeful Hearts",
+        color: Colors.pinkAccent,
+        imagePath: 'assets/images/hopeful_hearts.jpg'),
+    Community(
+        name: "Serene Souls",
+        color: Colors.greenAccent,
+        imagePath: 'assets/images/serene_souls.jpg'),
   ];
-
-  String getImagePath(String communityName) {
-    String formattedName = communityName.toLowerCase().replaceAll(' ', '_');
-    return 'assets/images/$formattedName.jpg';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +66,7 @@ class CommunityScreen extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Image.asset(
-                          getImagePath(community.name),
+                          community.imagePath,
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: double.infinity,

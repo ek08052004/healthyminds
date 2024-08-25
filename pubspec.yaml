@@ -40,6 +40,7 @@ dependencies:
   image_grid: ^0.0.7+3
   flutter_wall_layout: ^2.1.1
   lottie: ^2.7.0
+  smooth_page_indicator: ^1.0.0+2
 
 dev_dependencies:
   flutter_test:
