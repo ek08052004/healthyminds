@@ -59,9 +59,34 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                return ListTile(
-                  title: Text(message.content),
-                  subtitle: Text(message.sender),
+                bool isSender = message.sender == "You";
+                return Align(
+                  alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                    decoration: BoxDecoration(
+                      color: isSender ? Colors.blueAccent : Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          message.content,
+                          style: TextStyle(color: isSender ? Colors.white : Colors.black),
+                        ),
+                        SizedBox(height: 4.0),
+                        Text(
+                          message.sender,
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            color: isSender ? Colors.white70 : Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               },
             ),
