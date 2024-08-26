@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart'; // Import Lottie for animation
+import 'package:lottie/lottie.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
 import 'public_chat_room_screen.dart';
 import 'mood_tracker_screen.dart';
 import 'community_screen.dart';
-import 'educational_resources_screen.dart'; // Import the Educational Resources Screen
-import 'vision_board_screen.dart'; // Import Vision Board Screen
+import 'educational_resources_screen.dart';
+import 'vision_board_screen.dart';
 import 'future_letter_screen.dart';
+import 'profile_screen.dart';
+import 'habit_tracker.dart';
 
 class Community {
   final String name;
@@ -129,6 +134,19 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -205,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen>
                           child: Icon(
                             moodIcons[index],
                             color: isSelected ? moodColors[index] : Colors.grey,
-                            size: 50, // Reduced size
+                            size: 50,
                           ),
                         ),
                         SizedBox(height: 8),
@@ -265,7 +283,7 @@ class _HomeScreenState extends State<HomeScreen>
 
             // Horizontal Slider for Community Cards
             Container(
-              height: 250, // Adjust the height as needed
+              height: 250,
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: communities.length,
@@ -277,14 +295,13 @@ class _HomeScreenState extends State<HomeScreen>
                         context,
                         MaterialPageRoute(
                           builder: (context) => PublicChatRoomScreen(
-                            communityName:
-                                community.name, // Pass community name
+                            communityName: community.name,
                           ),
                         ),
                       );
                     },
                     child: Container(
-                      width: 200, // Adjust the width as needed
+                      width: 200,
                       margin: EdgeInsets.only(right: 16.0),
                       decoration: BoxDecoration(
                         color: Colors.transparent,
@@ -351,7 +368,8 @@ class _HomeScreenState extends State<HomeScreen>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => EducationalResourcesScreen()),
+                          builder: (context) => EducationalResourcesScreen(),
+                        ),
                       );
                     },
                     child: Row(
@@ -373,14 +391,15 @@ class _HomeScreenState extends State<HomeScreen>
 
             // Horizontal Slider for Educational Resources Cards
             Container(
-              height: 200, // Adjust the height as needed
+              height: 220,
+              margin: EdgeInsets.symmetric(vertical: 10.0),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: educationalResources.length,
                 itemBuilder: (context, index) {
                   final resource = educationalResources[index];
                   return Container(
-                    width: 150, // Adjust the width as needed
+                    width: 180,
                     margin: EdgeInsets.only(right: 16.0),
                     padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
@@ -404,7 +423,7 @@ class _HomeScreenState extends State<HomeScreen>
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 10),
                         Text(
                           resource.description,
                           maxLines: 2,
@@ -430,23 +449,26 @@ class _HomeScreenState extends State<HomeScreen>
             ),
 
             // Relive Your Moments Section
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    'Relive Your Moments',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+            SizedBox(
+              height: 50.0,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Relive Your Moments',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
 
-// Box Around Animation and Button Below "Promise to Yourself"
+            // Box Around Animation and Button Below "Promise to Yourself"
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Container(
@@ -465,7 +487,7 @@ class _HomeScreenState extends State<HomeScreen>
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Lottie.asset(
-                        'assets/animations/animationvision.json', // Replace with your animation file
+                        'assets/animations/animationvision.json',
                         height: 200,
                         width: 250,
                       ),
@@ -506,14 +528,92 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
 
-// Box Around Animation Below "Promise to Yourself"
+            // Promise To Yourself Section
+            SizedBox(
+              height: 50.0,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Promise To Yourself',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Box Around Animation and Button Below "Promise to Yourself"
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Lottie.asset(
+                        'assets/animations/Animationfutureletter.json',
+                        height: 200,
+                        width: 250,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          backgroundColor: Colors.blueAccent,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 12),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FutureLetterScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Write a Promise!',
+                          style: GoogleFonts.robotoCondensed(
+                            textStyle: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    'Promise To Yourself',
+                    'Track Your Habit',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -542,9 +642,9 @@ class _HomeScreenState extends State<HomeScreen>
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Lottie.asset(
-                        'assets/animations/Animationfutureletter.json', // Replace with your animation file
-                        height: 200,
-                        width: 250,
+                        'assets/animations/Animation7.json', // Replace with your animation file
+                        height: 280,
+                        width: 275,
                       ),
                     ),
                     Padding(
@@ -562,12 +662,12 @@ class _HomeScreenState extends State<HomeScreen>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => FutureLetterScreen(),
+                              builder: (context) => HabitTrackerScreen(),
                             ),
                           );
                         },
                         child: Text(
-                          'Write a Promise!',
+                          'Add A New Habit',
                           style: GoogleFonts.robotoCondensed(
                             textStyle: TextStyle(
                               fontSize: 20,
