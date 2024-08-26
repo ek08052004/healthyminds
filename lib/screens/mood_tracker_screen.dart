@@ -256,6 +256,15 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                         return isSameDay(_selectedDay, day);
                       },
                       onDaySelected: (selectedDay, focusedDay) {
+                        if (selectedDay.isAfter(DateTime.now())) {
+                          // Show an error message or simply return
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('You cannot set a mood for a future date.'),
+                            ),
+                          );
+                          return;
+                        }
                         setState(() {
                           _selectedDay = selectedDay;
                         });
@@ -358,16 +367,18 @@ class MoodPieChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final double total = moodCounts.reduce((a, b) => a + b).toDouble();
-    // final double radius = min(size.width / 2, size.height / 2);
-    final Paint paint = Paint()..style = PaintingStyle.fill;
+    final paint = Paint()..style = PaintingStyle.fill;
+    final total = moodCounts.reduce((a, b) => a + b);
+    double startAngle = -pi / 2;
 
-    double startAngle = 0.0;
     for (int i = 0; i < moodCounts.length; i++) {
-      final double sweepAngle = (moodCounts[i] / total) * 2 * pi;
+      final sweepAngle = 2 * pi * (moodCounts[i] / total);
       paint.color = moodColors[i];
       canvas.drawArc(
-        Rect.fromLTWH(0, 0, size.width, size.height),
+        Rect.fromCenter(
+            center: Offset(size.width / 2, size.height / 2),
+            width: size.width,
+            height: size.height),
         startAngle,
         sweepAngle,
         true,
@@ -378,7 +389,7 @@ class MoodPieChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
 
 class MoodGraph extends StatelessWidget {
@@ -393,36 +404,8 @@ class MoodGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<FlSpot> spots = [];
-    List<DateTime> dates = moodData.keys.toList();
-    dates.sort();
-    for (int i = 0; i < dates.length; i++) {
-      DateTime date = dates[i];
-      int moodIndex = moodData[date]!;
-      double moodValue = 0;
-
-      if (moodIndex == 0) {
-        // Rad
-        moodValue = 4.0; // Highest point
-      } else if (moodIndex == 1) {
-        // Good
-        moodValue = 3.0; // High point
-      } else if (moodIndex == 2) {
-        // Meh
-        moodValue = 2.0; // Middle point
-      } else if (moodIndex == 3) {
-        // Bad
-        moodValue = 1.0; // Low point
-      } else if (moodIndex == 4) {
-        // Awful
-        moodValue = 0.0; // Lowest point
-      }
-
-      spots.add(
-        FlSpot(i.toDouble(), moodValue),
-      );
-    }
-
+    List<DateTime> sortedDates = moodData.keys.toList()
+      ..sort((a, b) => a.compareTo(b));
     return LineChart(
       LineChartData(
         gridData: FlGridData(show: false),
@@ -430,87 +413,58 @@ class MoodGraph extends StatelessWidget {
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 40,
+              reservedSize: 22,
               getTitlesWidget: (value, meta) {
-                DateTime date = dates[value.toInt()];
-                return SideTitleWidget(
-                  axisSide: meta.axisSide,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Text(
-                      DateFormat('MM/dd').format(date),
-                      style: TextStyle(fontSize: 12, color: Colors.black),
-                    ),
-                  ),
+                int index = value.toInt();
+                if (index < 0 || index >= sortedDates.length) {
+                  return Container();
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(DateFormat('MMMd').format(sortedDates[index])),
                 );
               },
             ),
           ),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 40,
-              getTitlesWidget: (value, meta) {
-                int moodIndex = 4 - value.toInt(); // Reverse the order
-                if (moodIndex < 0 || moodIndex >= moodIcons.length)
-                  return Container();
-                return SideTitleWidget(
-                  axisSide: meta.axisSide,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Icon(
-                      moodIcons[moodIndex],
-                      color: moodColors[moodIndex],
-                      size: 20,
-                    ),
-                  ),
-                );
-              },
+              showTitles: false,
             ),
           ),
-          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: false,
+            ),
+          ),
+          topTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: false,
+            ),
+          ),
         ),
-        borderData: FlBorderData(show: false),
+        borderData: FlBorderData(
+          show: true,
+          border: Border.all(color: Colors.black12),
+        ),
+        minX: 0,
+        maxX: sortedDates.length - 1.toDouble(),
+        minY: 0,
+        maxY: 4,
         lineBarsData: [
           LineChartBarData(
-            spots: spots,
+            spots: sortedDates.asMap().entries.map((entry) {
+              int index = entry.key;
+              DateTime date = entry.value;
+              int moodIndex = moodData[date] ?? 0;
+              return FlSpot(index.toDouble(), moodIndex.toDouble());
+            }).toList(),
             isCurved: true,
-            gradient: LinearGradient(
-              colors: [
-                Colors.yellow, // Rad
-                Colors.green, // Good
-                Colors.purple, // Meh
-                Colors.orange, // Bad
-                Colors.red, // Awful
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+            color: Colors.purple,
+            barWidth: 4,
             belowBarData: BarAreaData(show: false),
+            dotData: FlDotData(show: false),
           ),
         ],
-        minX: 0,
-        maxX: (dates.length - 1).toDouble(),
-        minY: 0,
-        maxY: 4, // Corresponds to Rad
-        lineTouchData: LineTouchData(enabled: false),
-        extraLinesData: ExtraLinesData(
-          extraLinesOnTop: false,
-          horizontalLines: [
-            HorizontalLine(
-              y: 2, // Center line for Meh mood
-              color: Colors.black,
-              dashArray: [5, 5],
-              label: HorizontalLineLabel(
-                show: true,
-                labelResolver: (line) => "Meh",
-                alignment: Alignment.bottomRight,
-                style: TextStyle(color: Colors.purple),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
