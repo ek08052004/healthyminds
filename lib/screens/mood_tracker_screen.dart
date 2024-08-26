@@ -4,6 +4,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'dart:math';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';  
 
 class MoodTrackerScreen extends StatefulWidget {
   @override
@@ -16,11 +17,11 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
 
   final List<String> moods = ["Rad", "Good", "Meh", "Bad", "Awful"];
   final List<IconData> moodIcons = [
-    Icons.sentiment_very_satisfied,
-    Icons.sentiment_satisfied,
-    Icons.sentiment_neutral,
-    Icons.sentiment_dissatisfied,
-    Icons.sentiment_very_dissatisfied
+   FontAwesomeIcons.faceSmileBeam,    // Replaced with FontAwesome icon
+    FontAwesomeIcons.faceSmile,        // Replaced with FontAwesome icon
+    FontAwesomeIcons.faceMeh,          // Replaced with FontAwesome icon
+    FontAwesomeIcons.faceFrown,        // Replaced with FontAwesome icon
+    FontAwesomeIcons.faceSadTear,    // Replaced with FontAwesome icon
   ];
   final List<Color> moodColors = [
     Colors.yellow,

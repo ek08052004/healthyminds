@@ -7,6 +7,7 @@ import 'community_screen.dart';
 import 'educational_resources_screen.dart'; // Import the Educational Resources Screen
 import 'vision_board_screen.dart'; // Import Vision Board Screen
 import 'future_letter_screen.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';  
 
 class Community {
   final String name;
@@ -84,11 +85,11 @@ class _HomeScreenState extends State<HomeScreen>
   int _selectedMood = 4; // Default to Awful
   final List<String> moods = ["Rad", "Good", "Meh", "Bad", "Awful"];
   final List<IconData> moodIcons = [
-    Icons.sentiment_very_satisfied,
-    Icons.sentiment_satisfied,
-    Icons.sentiment_neutral,
-    Icons.sentiment_dissatisfied,
-    Icons.sentiment_very_dissatisfied
+    FontAwesomeIcons.faceSmileBeam,    // Replaced with FontAwesome icon
+    FontAwesomeIcons.faceSmile,        // Replaced with FontAwesome icon
+    FontAwesomeIcons.faceMeh,          // Replaced with FontAwesome icon
+    FontAwesomeIcons.faceFrown,        // Replaced with FontAwesome icon
+    FontAwesomeIcons.faceSadTear,    // Replaced with FontAwesome icon
   ];
   final List<Color> moodColors = [
     Colors.yellow,

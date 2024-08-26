@@ -41,10 +41,12 @@ dependencies:
   flutter_wall_layout: ^2.1.1
   lottie: ^2.7.0
   smooth_page_indicator: ^1.0.0+2
+  font_awesome_flutter: ^10.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
