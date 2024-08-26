@@ -38,8 +38,14 @@ dependencies:
   cupertino_icons: ^1.0.6
   image_picker: ^0.8.5+3
   image_grid: ^0.0.7+3
+<<<<<<< HEAD
   flutter_secure_storage: ^8.0.0
   shared_preferences: ^2.0.15
+=======
+  flutter_wall_layout: ^2.1.1
+  lottie: ^2.7.0
+  smooth_page_indicator: ^1.0.0+2
+>>>>>>> cd4f63948330f09a6940756db0136e036da8568f
 
 dev_dependencies:
   flutter_test:
@@ -67,7 +73,16 @@ flutter:
   assets:
      - assets/images/safteypingreen.jpg
      - assets/images/memoryframes.jpg
+     - assets/images/hopeful_hearts.jpg
+     - assets/images/calm_minds.jpg
+     - assets/images/serene_souls.jpg
      - assets/images/MY GOALS (1).png
+     - assets/animations/Animation4.json
+     - assets/images/login_image.png
+     - assets/animations/animation2.json
+     - assets/animations/animationvision.json
+     - assets/animations/Animationfutureletter.json
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

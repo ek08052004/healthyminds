@@ -4,9 +4,12 @@ import 'screens/home_screen.dart'; // Import HomeScreen
 import 'screens/mood_tracker_screen.dart'; // Import MoodTrackerScreen
 import 'screens/vision_board_screen.dart'; // Import VisionBoardScreen
 import 'screens/future_letter_screen.dart'; // Import FutureLetterScreen
+<<<<<<< HEAD
 import 'screens/chat_rooms_list_screen.dart'; // Import ChatRoomsListScreen
 import 'screens/chat_room_screen.dart'; // Import ChatRoomScreen
 import 'services/chat_service.dart'; // Import ChatRoom model
+=======
+>>>>>>> cd4f63948330f09a6940756db0136e036da8568f
 
 void main() {
   runApp(MyApp());
@@ -21,13 +24,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SplashScreen(), // Set SplashScreen as the home widget
+      home: HomeScreen(), // Set SplashScreen as the home widget
       initialRoute: '/home', // Set the initial route
       routes: {
         '/home': (context) => HomeScreen(),
         '/tracker': (context) => MoodTrackerScreen(),
         '/vision': (context) => VisionBoardScreen(),
         '/memory': (context) => FutureLetterScreen(),
+<<<<<<< HEAD
         '/chat_rooms': (context) => ChatRoomsListScreen(), // Add ChatRoomsListScreen route
       },
       onGenerateRoute: (settings) {
@@ -38,6 +42,8 @@ class MyApp extends StatelessWidget {
           );
         }
         return null; // Return null if the route is not handled
+=======
+>>>>>>> cd4f63948330f09a6940756db0136e036da8568f
       },
     );
   }

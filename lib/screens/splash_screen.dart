@@ -13,7 +13,12 @@ class SplashScreen extends StatelessWidget {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => isLoggedIn ? HomeScreen() : LoginScreen(),
+          builder: (context) {
+            final pageController = PageController(initialPage: 0);
+            return isLoggedIn
+                ? HomeScreen()
+                : LoginScreen(controller: pageController);
+          },
         ),
       );
     });
